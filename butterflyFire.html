@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec4 vPosition;
+attribute vec4 vColor;
+attribute vec2 vTexCoord;
+
+varying vec4 fColor;
+varying float s,t;
+varying vec2 fTexCoord;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+
+
+void
+main()
+{
+	float pi = acos(0.0);
+	s = 0.5*acos(vPosition.x)/pi;
+	t = 0.5*asin(vPosition.y/sqrt(1.0-vPosition.x*vPosition.x))/pi;
+
+    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+    fColor = vColor;
+    fTexCoord = vTexCoord;
+
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 fColor;
+
+varying float s,t;
+uniform sampler2D texture0;
+uniform sampler2D texture1;
+uniform int bTexCoord;
+varying vec2 fTexCoord;
+
+void
+main()
+{
+
+   if(bTexCoord == 1)
+		gl_FragColor = texture2D(texture1,fTexCoord);
+	else
+		gl_FragColor = texture2D(texture0,vec2(s,t));
+}
+</script>
+
+<p> </p>
+<button id = "Button0">Camera Increase theta</button>
+<button id = "Button1">Camera Decrease theta</button>
+<button id = "Button2">Camera Increase phi</button>
+<button id = "Button3">Camera Decrease phi</button>
+<p> </p>
+<button id = "Button4">Swings flap</button>
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="butterflyFire.js"></script>
+
+<body>
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+<img id = "texImage" src = "3.gif" hidden></img>
+
+<img id ="texImage2" src = "star.gif" hidden></img>
+
+</body>
+</html>
